@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HIPPO - Meme Token</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bungee+Shade&family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particlesjs/2.2.3/particles.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #00ffff;
+            --secondary-color: #ff00ff;
+            --tertiary-color: #ff69b4;
+            --background-color: #0a0a2a;
+            --text-color: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Quicksand', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+        }
+
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background-color: rgba(10, 10, 42, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .logo {
+            font-family: 'Bungee Shade', cursive;
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            text-shadow: 0 0 10px var(--primary-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            text-shadow: 0 0 20px var(--primary-color);
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            max-width: 600px;
+            margin-bottom: 40px;
+        }
+
+        .cta-button {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-button:hover {
+            background-color: var(--tertiary-color);
+            transform: scale(1.05);
+            box-shadow: 0 0 20px var(--tertiary-color);
+        }
+
+        .section {
+            padding: 100px 0;
+        }
+
+        h2 {
+            font-size: 3rem;
+            margin-bottom: 40px;
+            color: var(--secondary-color);
+            text-align: center;
+            text-shadow: 0 0 10px var(--secondary-color);
+        }
+
+        .about-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .about-text {
+            flex: 1;
+            padding-right: 40px;
+        }
+
+        .about-image {
+            flex: 1;
+            text-align: center;
+        }
+
+        .about-image img {
+            max-width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 0 30px var(--primary-color);
+        }
+
+        .tokenomics-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .tokenomics-list li {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .tokenomics-list li::before {
+            content: '🌟';
+            position: absolute;
+            left: 0;
+        }
+
+        .how-to-buy-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .step {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .step:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 255, 255, 0.2);
+        }
+
+        .step-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .roadmap {
+            position: relative;
+        }
+
+        .roadmap::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 4px;
+            background-color: var(--tertiary-color);
+            transform: translateX(-50%);
+        }
+
+        .roadmap-item {
+            margin-bottom: 100px;
+            position: relative;
+        }
+
+        .roadmap-content {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 20px;
+            width: calc(50% - 30px);
+            position: relative;
+        }
+
+        .roadmap-item:nth-child(odd) .roadmap-content {
+            margin-left: auto;
+        }
+
+        .roadmap-item::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: var(--tertiary-color);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        footer {
+            background-color: rgba(10, 10, 42, 0.8);
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            color: var(--text-color);
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--primary-color);
+        }
+
+        @keyframes neonGlow {
+            0% {
+                text-shadow: 0 0 10px var(--primary-color);
+            }
+            50% {
+                text-shadow: 0 0 20px var(--primary-color), 0 0 30px var(--primary-color);
+            }
+            100% {
+                text-shadow: 0 0 10px var(--primary-color);
+            }
+        }
+
+        .neon-text {
+            animation: neonGlow 2s infinite;
+        }
+
+        @media (max-width: 768px) {
+            .about-content {
+                flex-direction: column;
+            }
+
+            .about-text {
+                padding-right: 0;
+                margin-bottom: 40px;
+            }
+
+            .roadmap::before {
+                left: 20px;
+            }
+
+            .roadmap-content {
+                width: calc(100% - 50px);
+                margin-left: 50px !important;
+            }
+
+            .roadmap-item::before {
+                left: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="particles-js"></div>
+
+    <header>
+        <nav class="container">
+            <div class="logo">HIPPO</div>
+            <div class="nav-links">
+                <a href="#about">About</a>
+                <a href="#tokenomics">Tokenomics</a>
+                <a href="#how-to-buy">How to Buy</a>
+                <a href="#roadmap">Roadmap</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1 class="neon-text">HIPPO Token</h1>
+            <p>In a cosmic twist, a sunglass-clad hippo moonlights as a nightclub bouncer while hosting a talk show that pokes fun at celebrity tokens.</p>
+            <a href="#how-to-buy" class="cta-button">Join the Intergalactic Party!</a>
+        </section>
+
+        <section id="about" class="section">
+            <div class="container">
+                <h2>About HIPPO</h2>
+                <div class="about-content">
+                    <div class="about-text">
+                        <p>Welcome to the larger-than-life world of HIPPO! Our intergalactic hippo isn't just cracking jokes - he's breaking the mold of what a meme token can be. With his signature sunglasses and quick wit, HIPPO is the talk of the cosmos.</p>
+                        <p>From bouncing at the hottest nightclub in the galaxy to hosting a star-studded talk show, HIPPO is always at the center of the action. And now, you can join the party with HIPPO tokens!</p>
+                    </div>
+                    <div class="about-image">
+                        <img src="./logo.png" alt="HIPPO logo">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tokenomics" class="section">
+            <div class="container">
+                <h2>TOKENOMICS</h2>
+                <ul class="tokenomics-list">
+                    <li>Total Supply: 1,000,000,000,000 HIPPO</li>
+                    <li>5% Tax on Transactions: 2% to Liquidity, 3% to Marketing</li>
+                    <li>50% of Total Supply Burned at Launch</li>
+                    <li>Locked Liquidity for 1 Year</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="how-to-buy" class="section">
+            <div class="container">
+                <h2>HOW TO BUY</h2>
+                <div class="how-to-buy-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <p>Get a Wallet - Download a reputable Ethereum wallet like MetaMask or Trust Wallet.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <p>Acquire ETH - Purchase Ethereum (ETH) from a cryptocurrency exchange like Coinbase or Binance.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <p>Connect to a DEX - Connect your wallet to a decentralized exchange (DEX) like Uniswap or SushiSwap.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <p>Swap ETH for HIPPO - Use the DEX's swap feature to exchange your ETH for HIPPO.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="roadmap" class="section">
+            <div class="container">
+                <h2>ROADMAP</h2>
+                <div class="roadmap">
+                    <div class="roadmap-item">
+                        <div class="roadmap-content">
+                            <h3>Phase 1: Cosmic Launch</h3>
+                            <p>We'll blast off with our token launch and focus on building an intergalactic community of HIPPO enthusiasts.</p>
+                        </div>
+                    </div>
+                    <div class="roadmap-item">
+                        <div class="roadmap-content">
+                            <h3>Phase 2: Stellar Marketing</h3>
+                            <p>Time to make some noise! We'll ramp up our marketing efforts and form partnerships with other cosmic entities.</p>
+                        </div>
+                    </div>
+                    <div class="roadmap-item">
+                        <div class="roadmap-content">
+                            <h3>Phase 3: Galactic Development</h3>
+                            <p>We'll develop new features and utilities for HIPPO tokens, including our own DEX and NFT collection.</p>
+                        </div>
+                    </div>
+                    <div class="roadmap-item">
+                        <div class="roadmap-content">
+                            <h3>Phase 4: Universal Expansion</h3>
+                            <p>HIPPO takes over the universe! We'll explore new opportunities and expand our reach across the crypto cosmos.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>HIPPO Token Address: <span id="token-address">0x1234...5678</span> <i class="fas fa-copy" id="copy-address"></i></p>
+            <div class="social-links">
+                <a href="#" target="_blank"><i class="fab fa-youtube"></i></a>
+                <a href="#" target="_blank"><i class="fab fa-tiktok"></i></a>
+                <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+                <a href="#" target="_blank"><i class="fab fa-facebook"></i></a>
+                <a href="#" target="_blank"><i class="fab fa-x-twitter"></i></a>
+                <a href="#" target
